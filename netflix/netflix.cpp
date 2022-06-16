@@ -39,39 +39,52 @@ struct point {
 };
 
 inline bool is_color(int red, int green, int blue) {
-    
-    //original color purple
-    if (colorMode == 0) {
-        if (green >= 190) {
-            return false;
-        }
-
-        if (green >= 140) {
-            return abs(red - blue) <= 8 &&
-                red - green >= 50 &&
-                blue - green >= 50 &&
-                red >= 105 &&
-                blue >= 105;
-        }
-
-        return abs(red - blue) <= 13 &&
-            red - green >= 60 &&
-            blue - green >= 60 &&
-            red >= 110 &&
-            blue >= 100;
+    if (colorMode == 0) { // purple
+        if ((red >= 190 && green >= 100 && blue >= 200) ||
+            (red >= 80 && red <= 100 && green >= 20 && green <= 30 && blue >= 100 && blue <= 110) ||
+            (red >= 100 && red <= 190 && green >= 30 && green <= 90 && blue >= 110 && blue <= 200))
+            return true;
     }
-
-    // yellow
-    else {
-        if (red < 160)
-        {
-            return false;
-        }
-        if (red > 161 && red < 255) {
-            return green > 150 && green < 255 && blue > 0 && blue < 79;
-        }
-        return false;
+    else if (colorMode == 1) { // yellow
+    if ((red >= 170 && red <= 200 && green >= 165 && green <= 215 && blue >= 25 && blue <= 110) ||
+        (red >= 145 && red <= 170 && green >= 140 && green <= 165 && blue >= 5 && blue <= 55) ||
+        (red >= 200 && red <= 230 && green >= 200 && green <= 230 && blue >= 0 && blue <= 90) ||
+        (red >= 230 && green >= 230 && blue >= 90 && blue <= 190))
+        return true;
     }
+    ////original color purple
+    //if (colorMode == 0) {
+    //    if (green >= 190) {
+    //        return false;
+    //    }
+
+    //    if (green >= 140) {
+    //        return abs(red - blue) <= 8 &&
+    //            red - green >= 50 &&
+    //            blue - green >= 50 &&
+    //            red >= 105 &&
+    //            blue >= 105;
+    //    }
+
+    //    return abs(red - blue) <= 13 &&
+    //        red - green >= 60 &&
+    //        blue - green >= 60 &&
+    //        red >= 110 &&
+    //        blue >= 100;
+    //}
+
+    //// yellow
+    //else {
+    //    if (red < 160)
+    //    {
+    //        return false;
+    //    }
+    //    if (red > 161 && red < 255) {
+    //        return green > 150 && green < 255 && blue > 0 && blue < 79;
+    //    }
+    //    return false;
+    //}
+    return false;
 }
 
 BYTE* screenData = 0;
@@ -80,7 +93,7 @@ const int screen_width = get_screen_width(), screen_height = get_screen_height()
 
 //bot with purple (original (again not default))
 void bot() {
-    int w = 8, h = 10;
+    int w = 8, h = 8;
     auto t_start = std::chrono::high_resolution_clock::now();
     auto t_end = std::chrono::high_resolution_clock::now();
 
@@ -163,11 +176,13 @@ void bot() {
                 if ((GetAsyncKeyState(VK_XBUTTON1) && isDown) && !(GetAsyncKeyState(VK_LBUTTON) && isDown)) { //IS PRESSING TRIGGER KEY AND ISNT PRESSING THE MOUSE 1
                     if (is_color(red, green, blue)) {
                         PostMessage(deeznuts, WM_LBUTTONDOWN, 1, 0);
-                        Sleep(1);
+                        Sleep(100);
                         PostMessage(deeznuts, WM_LBUTTONUP, 1, 0);
-                        Sleep(1);
                         Sleep(100);
                     }
+                }
+                else {
+                    Sleep(1);
                 }
             }
         }
